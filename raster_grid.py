@@ -44,17 +44,17 @@ class RasterGrid:
             / self._ny,
         )
 
-    def calc_eps(self, Pt_LowerLeft: Point, Pt_UpperRight: Point) -> float:
+    def calc_eps(self) -> float:
         return 1e-6 * max(
-            (Pt_UpperRight.x - Pt_LowerLeft.x) / self._nx,
-            (Pt_UpperRight.y - Pt_LowerLeft.y) / self._ny,
+            (self.Pt_UpperRight.x - self.Pt_LowerLeft.x) / self._nx,
+            (self.Pt_UpperRight.y - self.Pt_LowerLeft.y) / self._ny,
         )
 
     def calc_abs(self, no1: float, no2: float) -> float:
         return abs(no1 - no2)
 
     def locate_cell(self, Pt: Point) -> Cell:
-        eps = self.calc_eps(self.Pt_LowerLeft, self.Pt_UpperRight)
+        eps = self.calc_eps()
 
         if self.calc_abs(Pt.x, self.Pt_UpperRight.x) < eps:
             ix = self._nx - 1
