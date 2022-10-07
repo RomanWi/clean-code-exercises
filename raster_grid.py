@@ -47,7 +47,7 @@ class RasterGrid:
     def calc_abs(self, no1: float, no2:float) -> float:
         return abs(no1 - no2)
 
-    def get_cell_coords(self, Pt: Point) -> Cell:
+    def locate_cell(self, Pt: Point) -> Cell:
         eps = self.calc_eps(self.Pt_LowerLeft, self.Pt_UpperRight)
 
         if self.calc_abs(Pt._x, self.Pt_UpperRight._x) < eps:
@@ -78,29 +78,29 @@ def test_number_of_cells():
 
 def test_locate_cell():
     grid = RasterGrid(Point(0.0, 0.0), Point(2.0, 2.0), 2, 2)
-    cell = grid.get_cell_coords(Point(0, 0))
+    cell = grid.locate_cell(Point(0, 0))
     assert cell._ix == 0 and cell._iy == 0
-    cell = grid.get_cell_coords(Point(1, 1))
+    cell = grid.locate_cell(Point(1, 1))
     assert cell._ix == 1 and cell._iy == 1
-    cell = grid.get_cell_coords(Point(0.5, 0.5))
+    cell = grid.locate_cell(Point(0.5, 0.5))
     assert cell._ix == 0 and cell._iy == 0
-    cell = grid.get_cell_coords(Point(1.5, 0.5))
+    cell = grid.locate_cell(Point(1.5, 0.5))
     assert cell._ix == 1 and cell._iy == 0
-    cell = grid.get_cell_coords(Point(0.5, 1.5))
+    cell = grid.locate_cell(Point(0.5, 1.5))
     assert cell._ix == 0 and cell._iy == 1
-    cell = grid.get_cell_coords(Point(1.5, 1.5))
+    cell = grid.locate_cell(Point(1.5, 1.5))
     assert cell._ix == 1 and cell._iy == 1
 
 
 def test_cell_center():
     grid = RasterGrid(Point(0.0, 0.0), Point(2.0, 2.0), 2, 2)
-    cell = grid.get_cell_coords(Point(0.5, 0.5))
+    cell = grid.locate_cell(Point(0.5, 0.5))
     assert abs(grid.get_cell_center(cell)[0] - 0.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 0.5) < 1e-7
-    cell = grid.get_cell_coords(Point(1.5, 0.5))
+    cell = grid.locate_cell(Point(1.5, 0.5))
     assert abs(grid.get_cell_center(cell)[0] - 1.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 0.5) < 1e-7
-    cell = grid.get_cell_coords(Point(0.5, 1.5))
+    cell = grid.locate_cell(Point(0.5, 1.5))
     assert abs(grid.get_cell_center(cell)[0] - 0.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 1.5) < 1e-7
-    cell = grid.get_cell_coords(Point(1.5, 1.5))
+    cell = grid.locate_cell(Point(1.5, 1.5))
     assert abs(grid.get_cell_center(cell)[0] - 1.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 1.5) < 1e-7
 
 
