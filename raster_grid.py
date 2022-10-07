@@ -10,8 +10,8 @@ from typing import Tuple
 from dataclasses import dataclass
 @dataclass
 class Point:
-    x: float
-    y: float
+    _x: float
+    _y: float
 
 class RasterGrid:
     @dataclass
@@ -35,27 +35,27 @@ class RasterGrid:
 
     def get_cell_center(self, cell: Cell) -> Point:
         return (
-            self.Pt_LowerLeft.x + (float(cell._ix) + 0.5)*(self.Pt_UpperRight.x - self.Pt_LowerLeft.x)/self._nx,
-            self.Pt_LowerLeft.y + (float(cell._iy) + 0.5)*(self.Pt_UpperRight.y - self.Pt_LowerLeft.y)/self._ny
+            self.Pt_LowerLeft._x + (float(cell._ix) + 0.5)*(self.Pt_UpperRight._x - self.Pt_LowerLeft._x)/self._nx,
+            self.Pt_LowerLeft._y+ (float(cell._iy) + 0.5)*(self.Pt_UpperRight._y - self.Pt_LowerLeft._y)/self._ny
         )
 
-    def get_cell_coords(self, x: float, y: float) -> Cell:
+    def get_cell_coords(self, Pt: Point) -> Cell:
         eps = 1e-6*max(
-            (self.Pt_UpperRight.x-self.Pt_LowerLeft.x)/self._nx,
-            (self.Pt_UpperRight.y-self.Pt_LowerLeft.y)/self._ny
+            (self.Pt_UpperRight._x-self.Pt_LowerLeft._x)/self._nx,
+            (self.Pt_UpperRight._y-self.Pt_LowerLeft._y)/self._ny
         )
-        if abs(x - self.Pt_UpperRight.x) < eps:
+        if abs(Pt._x - self.Pt_UpperRight._x) < eps:
             ix = self._nx - 1
-        elif abs(x - self.Pt_LowerLeft.x) < eps:
+        elif abs(Pt._x - self.Pt_LowerLeft._x) < eps:
             ix = 0
         else:
-            ix = int((x - self.Pt_LowerLeft.x)/((self.Pt_UpperRight.x - self.Pt_LowerLeft.x)/self._nx))
-        if abs(y - self.Pt_UpperRight.y) < eps:
+            ix = int((Pt._x - self.Pt_LowerLeft._x)/((self.Pt_UpperRight._x - self.Pt_LowerLeft._x)/self._nx))
+        if abs(Pt._y- self.Pt_UpperRight._y) < eps:
             iy = self._ny - 1
-        elif abs(y - self.Pt_LowerLeft.y) < eps:
+        elif abs(Pt._y- self.Pt_LowerLeft._y) < eps:
             iy = 0
         else:
-            iy = int((y - self.Pt_LowerLeft.y)/((self.Pt_UpperRight.y - self.Pt_LowerLeft.y)/self._ny))
+            iy = int((Pt._y- self.Pt_LowerLeft._y)/((self.Pt_UpperRight._y- self.Pt_LowerLeft._y)/self._ny))
         return self.Cell(ix, iy)
 
 
@@ -72,29 +72,29 @@ def test_number_of_cells():
 
 def test_locate_cell():
     grid = RasterGrid(Point(0.0, 0.0), Point(2.0, 2.0), 2, 2)
-    cell = grid.get_cell_coords(0, 0)
+    cell = grid.get_cell_coords(Point(0, 0))
     assert cell._ix == 0 and cell._iy == 0
-    cell = grid.get_cell_coords(1, 1)
+    cell = grid.get_cell_coords(Point(1, 1))
     assert cell._ix == 1 and cell._iy == 1
-    cell = grid.get_cell_coords(0.5, 0.5)
+    cell = grid.get_cell_coords(Point(0.5, 0.5))
     assert cell._ix == 0 and cell._iy == 0
-    cell = grid.get_cell_coords(1.5, 0.5)
+    cell = grid.get_cell_coords(Point(1.5, 0.5))
     assert cell._ix == 1 and cell._iy == 0
-    cell = grid.get_cell_coords(0.5, 1.5)
+    cell = grid.get_cell_coords(Point(0.5, 1.5))
     assert cell._ix == 0 and cell._iy == 1
-    cell = grid.get_cell_coords(1.5, 1.5)
+    cell = grid.get_cell_coords(Point(1.5, 1.5))
     assert cell._ix == 1 and cell._iy == 1
 
 
 def test_cell_center():
     grid = RasterGrid(Point(0.0, 0.0), Point(2.0, 2.0), 2, 2)
-    cell = grid.get_cell_coords(0.5, 0.5)
+    cell = grid.get_cell_coords(Point(0.5, 0.5))
     assert abs(grid.get_cell_center(cell)[0] - 0.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 0.5) < 1e-7
-    cell = grid.get_cell_coords(1.5, 0.5)
+    cell = grid.get_cell_coords(Point(1.5, 0.5))
     assert abs(grid.get_cell_center(cell)[0] - 1.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 0.5) < 1e-7
-    cell = grid.get_cell_coords(0.5, 1.5)
+    cell = grid.get_cell_coords(Point(0.5, 1.5))
     assert abs(grid.get_cell_center(cell)[0] - 0.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 1.5) < 1e-7
-    cell = grid.get_cell_coords(1.5, 1.5)
+    cell = grid.get_cell_coords(Point(1.5, 1.5))
     assert abs(grid.get_cell_center(cell)[0] - 1.5) < 1e-7 and abs(grid.get_cell_center(cell)[1] - 1.5) < 1e-7
 
 
