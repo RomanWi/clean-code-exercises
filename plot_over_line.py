@@ -26,10 +26,10 @@ class RasterData:
     values: DataArray
 
 
-def plot_over_line(raster_data: RasterData,
+def calc_data_over_line(raster_data: RasterData,
                    p0: Point,
                    p1: Point,
-                   n: int = 1000) -> None:
+                   n: int = 1000) -> Tuple[List[float], List[float]]:
     current = Point(p0.x, p0.y)
     dp = (
         (p1.x - p0.x)/(n - 1),
@@ -50,10 +50,12 @@ def plot_over_line(raster_data: RasterData,
         else:
             y.append(raster_data.values[ix][iy])
 
+    return x, y
+
+def plot_data(x,y: Tuple[List[float], List[float]]) -> None:
     plot(x, y)
     show()
     close()
-
 
 if __name__ == "__main__":
     n = (100, 100)
@@ -64,9 +66,10 @@ if __name__ == "__main__":
     ]
 
     data = RasterData(p0=Point(0., 0.), dx=dx, n=n, values=values)
-    plot_over_line(
+    x, y = calc_data_over_line(
         data,
         Point(0.0, 0.0),
         Point(1.0, 1.0),
         n=2000
     )
+    plot_data(x, y)
