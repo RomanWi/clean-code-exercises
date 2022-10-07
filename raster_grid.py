@@ -12,8 +12,8 @@ from dataclasses import dataclass
 
 @dataclass
 class Point:
-    _x: float
-    _y: float
+    x: float
+    y: float
 
 
 class RasterGrid:
@@ -34,20 +34,20 @@ class RasterGrid:
 
     def get_cell_center(self, cell: Cell) -> Point:
         return (
-            self.Pt_LowerLeft._x
+            self.Pt_LowerLeft.x
             + (float(cell._ix) + 0.5)
-            * (self.Pt_UpperRight._x - self.Pt_LowerLeft._x)
+            * (self.Pt_UpperRight.x - self.Pt_LowerLeft.x)
             / self._nx,
-            self.Pt_LowerLeft._y
+            self.Pt_LowerLeft.y
             + (float(cell._iy) + 0.5)
-            * (self.Pt_UpperRight._y - self.Pt_LowerLeft._y)
+            * (self.Pt_UpperRight.y - self.Pt_LowerLeft.y)
             / self._ny,
         )
 
     def calc_eps(self, Pt_LowerLeft: Point, Pt_UpperRight: Point) -> float:
         return 1e-6 * max(
-            (Pt_UpperRight._x - Pt_LowerLeft._x) / self._nx,
-            (Pt_UpperRight._y - Pt_LowerLeft._y) / self._ny,
+            (Pt_UpperRight.x - Pt_LowerLeft.x) / self._nx,
+            (Pt_UpperRight.y - Pt_LowerLeft.y) / self._ny,
         )
 
     def calc_abs(self, no1: float, no2: float) -> float:
@@ -56,23 +56,23 @@ class RasterGrid:
     def locate_cell(self, Pt: Point) -> Cell:
         eps = self.calc_eps(self.Pt_LowerLeft, self.Pt_UpperRight)
 
-        if self.calc_abs(Pt._x, self.Pt_UpperRight._x) < eps:
+        if self.calc_abs(Pt.x, self.Pt_UpperRight.x) < eps:
             ix = self._nx - 1
-        elif self.calc_abs(Pt._x, self.Pt_LowerLeft._x) < eps:
+        elif self.calc_abs(Pt.x, self.Pt_LowerLeft.x) < eps:
             ix = 0
         else:
             ix = int(
-                (Pt._x - self.Pt_LowerLeft._x)
-                / ((self.Pt_UpperRight._x - self.Pt_LowerLeft._x) / self._nx)
+                (Pt.x - self.Pt_LowerLeft.x)
+                / ((self.Pt_UpperRight.x - self.Pt_LowerLeft.x) / self._nx)
             )
-        if self.calc_abs(Pt._y, self.Pt_UpperRight._y) < eps:
+        if self.calc_abs(Pt.y, self.Pt_UpperRight.y) < eps:
             iy = self._ny - 1
-        elif self.calc_abs(Pt._y, self.Pt_LowerLeft._y) < eps:
+        elif self.calc_abs(Pt.y, self.Pt_LowerLeft.y) < eps:
             iy = 0
         else:
             iy = int(
-                (Pt._y - self.Pt_LowerLeft._y)
-                / ((self.Pt_UpperRight._y - self.Pt_LowerLeft._y) / self._ny)
+                (Pt.y - self.Pt_LowerLeft.y)
+                / ((self.Pt_UpperRight.y - self.Pt_LowerLeft.y) / self._ny)
             )
         return self.Cell(ix, iy)
 
