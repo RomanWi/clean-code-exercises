@@ -39,20 +39,26 @@ class RasterGrid:
             self.Pt_LowerLeft._y+ (float(cell._iy) + 0.5)*(self.Pt_UpperRight._y - self.Pt_LowerLeft._y)/self._ny
         )
 
-    def get_cell_coords(self, Pt: Point) -> Cell:
-        eps = 1e-6*max(
+    def calc_eps(self, Pt_LowerLeft: Point, Pt_UpperRight:Point) -> float:
+        return  1e-6*max(
             (self.Pt_UpperRight._x-self.Pt_LowerLeft._x)/self._nx,
-            (self.Pt_UpperRight._y-self.Pt_LowerLeft._y)/self._ny
-        )
-        if abs(Pt._x - self.Pt_UpperRight._x) < eps:
+            (self.Pt_UpperRight._y-self.Pt_LowerLeft._y)/self._ny)
+
+    def calc_abs(self, no1: float, no2:float) -> float:
+        return abs(no1 - no2)
+
+    def get_cell_coords(self, Pt: Point) -> Cell:
+        eps = self.calc_eps(self.Pt_LowerLeft, self.Pt_UpperRight)
+
+        if self.calc_abs(Pt._x, self.Pt_UpperRight._x) < eps:
             ix = self._nx - 1
-        elif abs(Pt._x - self.Pt_LowerLeft._x) < eps:
+        elif self.calc_abs(Pt._x, self.Pt_LowerLeft._x) < eps:
             ix = 0
         else:
             ix = int((Pt._x - self.Pt_LowerLeft._x)/((self.Pt_UpperRight._x - self.Pt_LowerLeft._x)/self._nx))
-        if abs(Pt._y- self.Pt_UpperRight._y) < eps:
+        if self.calc_abs(Pt._y, self.Pt_UpperRight._y) < eps:
             iy = self._ny - 1
-        elif abs(Pt._y- self.Pt_LowerLeft._y) < eps:
+        elif self.calc_abs(Pt._y, self.Pt_LowerLeft._y) < eps:
             iy = 0
         else:
             iy = int((Pt._y- self.Pt_LowerLeft._y)/((self.Pt_UpperRight._y- self.Pt_LowerLeft._y)/self._ny))
