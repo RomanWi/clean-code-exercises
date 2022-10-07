@@ -41,8 +41,8 @@ class RasterGrid:
 
     def calc_eps(self, Pt_LowerLeft: Point, Pt_UpperRight:Point) -> float:
         return  1e-6*max(
-            (self.Pt_UpperRight._x-self.Pt_LowerLeft._x)/self._nx,
-            (self.Pt_UpperRight._y-self.Pt_LowerLeft._y)/self._ny)
+            (Pt_UpperRight._x-Pt_LowerLeft._x)/self._nx,
+            (Pt_UpperRight._y-Pt_LowerLeft._y)/self._ny)
 
     def calc_abs(self, no1: float, no2:float) -> float:
         return abs(no1 - no2)
